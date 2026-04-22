@@ -1,0 +1,17 @@
+{
+    "workbench.colorTheme": "Solarized Light",
+    "git.confirmSync": false,
+    "explorer.confirmDragAndDrop": false,
+    "[yaml]": {
+        "editor.tabSize": 2,
+        "editor.insertSpaces": true,
+        "editor.detectIndentation": false
+    },
+    "[plaintext]": {
+        "editor.unicodeHighlight.ambiguousCharacters": false,
+        "editor.unicodeHighlight.invisibleCharacters": false,
+        "editor.tabSize": 2,
+        "editor.insertSpaces": true,
+        "editor.detectIndentation": false
+    }
+}
