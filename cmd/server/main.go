@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"errors"
+	"fmt"
 	"log"
 	"net/http"
 
@@ -19,12 +20,16 @@ func (s *GreetServer) Greet(
 	ctx context.Context,
 	req *greetv1.GreetRequest,
 ) (*greetv1.GreetResponse, error) {
-	err := connect.NewError(
-		connect.CodeUnknown,
-		errors.New("oh no!"),
+	callInfo, ok := connect.CallInfoForHandlerContext(ctx)
+	if !ok {
+		return nil, errors.New("can't access headers: no CallInfo for handler context")
+	}
+	fmt.Println(callInfo.RequestHeader().Get("Acme-Tenant-Id"))
+	callInfo.ResponseHeader().Set(
+		"Greet-Emoji-Bin",
+		connect.EncodeBinaryHeader([]byte("👋")),
 	)
-	err.Meta().Set("Greet-Version", "v1")
-	return nil, err
+	return &greetv1.GreetResponse{}, nil
 }
 
 func main() {
