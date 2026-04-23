@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"net/http"
 
@@ -15,12 +16,18 @@ import (
 type GreetServer struct{}
 
 func (s *GreetServer) Greet(
-	_ context.Context,
+	ctx context.Context,
 	req *greetv1.GreetRequest,
 ) (*greetv1.GreetResponse, error) {
+	callInfo, ok := connect.CallInfoForHandlerContext(ctx)
+	if !ok {
+		return nil, errors.New("can't access headers: no CallInfo for handler context")
+	}
+	fmt.Println(callInfo.RequestHeader().Get("Acme-Tenant-Id"))
 	res := &greetv1.GreetResponse{
 		Greeting: fmt.Sprintf("Hello, %s!", req.Name),
 	}
+	callInfo.ResponseHeader().Set("Greet-Version", "v1")
 	return res, nil
 }
 
