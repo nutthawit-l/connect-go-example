@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"errors"
-	"fmt"
 	"log"
 	"net/http"
 
@@ -24,11 +23,8 @@ func (s *GreetServer) Greet(
 	if !ok {
 		return nil, errors.New("can't access headers: no CallInfo for handler context")
 	}
-	fmt.Println(callInfo.RequestHeader().Get("Acme-Tenant-Id"))
-	callInfo.ResponseHeader().Set(
-		"Greet-Emoji-Bin",
-		connect.EncodeBinaryHeader([]byte("👋")),
-	)
+	// Sent as the HTTP header Trailer-Greet-Version.
+	callInfo.ResponseTrailer().Set("Greet-Version", "v1")
 	return &greetv1.GreetResponse{}, nil
 }
 

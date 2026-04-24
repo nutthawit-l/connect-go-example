@@ -25,8 +25,9 @@ func main() {
 		fmt.Println(err)
 		return
 	}
-	encoded := callInfo.ResponseHeader().Get("Greet-Emoji-Bin")
-	if emoji, err := connect.DecodeBinaryHeader(encoded); err == nil {
-		fmt.Println(string(emoji))
-	}
+	// Doesn't contain "Greet-Version" because any HTTP headers prefixed with
+	// Trailer- are treated as trailers.
+	fmt.Println(callInfo.RequestHeader())
+	// Prefixes are automatically stripped.
+	fmt.Println(callInfo.ResponseTrailer().Get("Greet-Version"))
 }
